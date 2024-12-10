@@ -1,0 +1,29 @@
+
+
+services:
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: med_db
+      POSTGRES_USER: med_user
+      POSTGRES_PASSWORD: P0lsha
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data  # Постоянное хранилище данных PostgreSQL
+      - ./create.sql:/docker-entrypoint-initdb.d/create.sql  # Автозапуск SQL-скрипта
+
+  web:
+    build:
+      context: .
+    container_name: django_app
+#    command: ./wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./medical:/app/medical
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgres://med_user:P0lsha@db:5432/med_db
