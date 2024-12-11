@@ -34,3 +34,9 @@ docker-compose exec web sh -c "cd /app/medical && pytest"
 Эта команда запустит тесты.
 
 Документация по API написана в API_DOCS.md
+
+## System Information
+
+- **Ubuntu Version**: 24.04.1 LTS (Codename: noble)
+- **Docker Version**: 27.3.1
+- **Docker Compose Version**: v2.29.2
