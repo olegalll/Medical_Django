@@ -11,8 +11,8 @@ services:
     ports:
       - "15432:5432"
     volumes:
-      - ./data:/var/lib/postgresql/data  # Постоянное хранилище данных PostgreSQL
-      - ./create.sql:/docker-entrypoint-initdb.d/create.sql  # Автозапуск SQL-скрипта
+      - ./data:/var/lib/postgresql/data
+      - ./create.sql:/docker-entrypoint-initdb.d/create.sql
 
   web:
     build:

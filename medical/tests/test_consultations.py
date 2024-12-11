@@ -149,7 +149,7 @@ def test_filter_consultations_by_patient_name(api_client, create_user, create_co
 
 def test_sort_consultations_by_created_at(api_client, create_user, create_consultation):
     """Сортировка консультаций по времени создания."""
-    url = "/api/consultations/?ordering=-created_at"
+    url = "/api/consultations/?ordering=created_at"
     api_client.force_authenticate(user=create_user)
 
     response = api_client.get(url)
