@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Consultation
 from .serializers import ConsultationSerializer
-from .permissions import CanWorkWithConsultation, CanChangeStatusConsultation
+from .permissions import CanWorkWithConsultation
 
 
 class ConsultationViewSet(viewsets.ModelViewSet):
@@ -40,16 +40,13 @@ class ConsultationViewSet(viewsets.ModelViewSet):
             self.check_object_permissions(request, obj)
         return super().list(request, *args, **kwargs)
 
-    @action(detail=True, methods=['patch'], permission_classes=[CanChangeStatusConsultation])
+    @action(detail=True, methods=['patch'])
     def change_status(self, request, pk=None):
-        permission = CanChangeStatusConsultation()
         try:
             consultation = Consultation.objects.get(pk=pk)
         except Consultation.DoesNotExist:
             return Response({"error": "Консультация не найдена"}, status=status.HTTP_404_NOT_FOUND)
-
-        if not permission.has_object_permission(request, self, consultation):
-            return Response({"error": "У вас нет прав на обновление"}, status=status.HTTP_403_FORBIDDEN)
+        self.check_object_permissions(request, consultation)
 
         new_status = request.data.get('status')
         if new_status not in dict(Consultation.STATUS_CHOICES).keys():

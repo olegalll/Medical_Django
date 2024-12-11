@@ -21,9 +21,20 @@ services:
 #    command: ./wait-for-it.sh db:5432 -- python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./medical:/app/medical
+      - ./wait-for-it.sh:/app/wait-for-it.sh
+      - ./.flake8:/app/.flake8
+      - ./requirements.txt:/app/requirements.txt
     ports:
       - "8000:8000"
     depends_on:
       - db
     environment:
       - DATABASE_URL=postgres://med_user:P0lsha@db:5432/med_db
+    command: >
+      sh -c "
+      chmod +x /app/wait-for-it.sh &&
+      /app/wait-for-it.sh db:5432 -- 
+      pip install --no-cache-dir -r /app/requirements.txt &&
+      python /app/medical/manage.py migrate &&
+      python /app/medical/manage.py runserver 0.0.0.0:8000
+      "

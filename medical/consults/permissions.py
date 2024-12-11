@@ -44,7 +44,11 @@ class CanWorkWithConsultation(BasePermission):
         if request.user.role == 'admin':
             return True
 
-        if view.action == 'create':
+        if view.action == 'change_status':
+            if request.user.role == 'doctor':
+                return True
+            return False
+        elif view.action == 'create':
             if request.user.role == 'doctor':
                 doctor_id = request.data.get('doctor_id')
                 return doctor_id and str(doctor_id) == str(request.user.doctor.id)
@@ -67,31 +71,14 @@ class CanWorkWithConsultation(BasePermission):
         - Админ имеет доступ ко всем консультациям.
         - Врач и пациент имеют доступ только к своим консультациям.
         """
-        print(f"User trying to access: {request.user}")
-        print(f"Object details: Doctor = {obj.doctor.user}, Patient = {obj.patient.user}")
         if request.user.role == "admin":
             return True
-        if view.action in ['create', 'update', 'destroy', 'partial_update']:
+        if view.action in ['create', 'update', 'destroy', 'partial_update', 'change_status']:
             if request.user.role == 'doctor' and obj.doctor.user == request.user:
                 return True
         else:
             if request.user.role == "doctor":
-                print(f"Doctor match: {obj.doctor.user == request.user}")
                 return obj.doctor.user == request.user
             if request.user.role == "patient":
                 return obj.patient.user == request.user
-        return False
-
-
-class CanChangeStatusConsultation(BasePermission):
-    """Проверка прав доступа на изменение статуса консультации.
-    - Администратор может обновлять любой статус.
-    - Врач может обновлять статус только своей консультации.
-    """
-
-    def has_object_permission(self, request, view, obj):
-        if request.user.role == 'admin':
-            return True
-        if request.user.role == 'doctor' and obj.doctor.user == request.user:
-            return True
         return False
