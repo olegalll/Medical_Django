@@ -35,6 +35,14 @@ docker-compose exec web sh -c "cd /app/medical && pytest"
 
 Документация по API написана в API_DOCS.md
 
+Если есть проблемы с запуском docker postgres_db
+Она может быть связана с
+```bash
+volumes:
+- ./data:/var/lib/postgresql/data
+```
+Можно поменять /var/lib/postgresql/data например на /tmp/data
+
 ## System Information
 
 - **Ubuntu Version**: 24.04.1 LTS (Codename: noble)
