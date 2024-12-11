@@ -19,7 +19,7 @@ git clone git@github.com:olegalll/Medical_Django.git
 При создании в Докер инициализируется БД, создается пользователь, для джаного устанавиливаются requirements.txt, применяются миграции джанго и запускается проект по адресу http://127.0.0.1:8000
 ```bash
 cd Medical_Django
-docker-compose up --build
+docker-compose up
 ```
 
 ## Приложение покрыто тестами medical/tests
